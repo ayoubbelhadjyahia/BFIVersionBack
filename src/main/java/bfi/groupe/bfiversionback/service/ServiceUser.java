@@ -5,11 +5,8 @@ import bfi.groupe.bfiversionback.entity.Utilisateur;
 import bfi.groupe.bfiversionback.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -47,11 +44,19 @@ UserRepository userRepository;
     }
     @Override
     public ResponseEntity<?> Login(String username, String password) {
-        if(userRepository.GetUserByUsername(username)==null&&userRepository.GetUserByEmail(username)==null){
-            return ResponseEntity.ok("nom ou email est incorrect");
-        }else if(!passwordEncoder.matches(password,userRepository.GetUserByUsername(username).getPassword())||!passwordEncoder.matches(password,userRepository.GetUserByEmail(username).getPassword())){
+        if(userRepository.GetUserByUsername(username)==null){
+            if(userRepository.GetUserByEmail(username)==null){
+                return ResponseEntity.ok("nom ou email est incorrect");
+            }
+            if(!passwordEncoder.matches(password,userRepository.GetUserByEmail(username).getPassword())){
+                return ResponseEntity.ok("mot de passe est incorrect");
+            }
+            return ResponseEntity.ok(userRepository.GetUserByEmail(username));
+        }
+        if(!passwordEncoder.matches(password,userRepository.GetUserByUsername(username).getPassword())){
             return ResponseEntity.ok("mot de passe est incorrect");
-        }else
+        }
+
         return ResponseEntity.ok(userRepository.GetUserByUsername(username));
     }
 
