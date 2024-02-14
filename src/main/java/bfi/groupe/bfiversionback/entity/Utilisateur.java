@@ -18,6 +18,7 @@ public class Utilisateur implements Serializable {
     private String Username;
     private String Email;
     private String Password;
+    private Long Phonenumber;
     private String CodeVerification;
     @Enumerated(EnumType.STRING)
     private  Role Role;
