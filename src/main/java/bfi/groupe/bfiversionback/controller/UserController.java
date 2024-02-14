@@ -56,6 +56,6 @@ public class UserController {
     }
     @PostMapping("/resetPassword")
     ResponseEntity resetPassword(@RequestBody ResetPassword resetPassword) {
-        return iserviceUser.ResetPassword(resetPassword.getVerificationCode(),resetPassword.getNewPassword());
+        return ResponseEntity.ok(new MessageResponse(iserviceUser.ResetPassword(resetPassword.getVerificationCode(),resetPassword.getNewPassword())));
     }
 }

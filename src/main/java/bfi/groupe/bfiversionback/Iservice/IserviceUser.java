@@ -11,5 +11,5 @@ public interface IserviceUser {
      String addUser(Utilisateur utilisateur);
      ResponseEntity<?> Login(String usernameOuEmail, String password);
      String SendCode(String Email);
-     ResponseEntity ResetPassword(String Code,String NewPassword);
+     String ResetPassword(String Code, String NewPassword);
 }

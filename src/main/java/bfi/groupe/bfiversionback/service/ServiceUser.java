@@ -76,13 +76,13 @@ UserRepository userRepository;
     }
 
     @Override
-    public ResponseEntity ResetPassword(String Code, String NewPassword) {
+    public String ResetPassword(String Code, String NewPassword) {
         Utilisateur u = userRepository.GetUserByCode(Code);
         if (u == null ){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return "code est incorrect";
         }
         else if(u.getDateEndCode().isBefore(LocalDateTime.now())) {
-            return new ResponseEntity<>(HttpStatus.GATEWAY_TIMEOUT);
+            return "date expirer ";
         }
         else{
                 u.setPassword(passwordEncoder.encodePassword(NewPassword));
@@ -91,7 +91,7 @@ UserRepository userRepository;
                 userRepository.save(u);
             }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return "OK";
 
     }
 }
