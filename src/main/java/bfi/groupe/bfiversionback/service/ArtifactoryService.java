@@ -9,14 +9,11 @@ import org.springframework.web.client.RestTemplate;
 public class ArtifactoryService {
 
     private final String baseUrl;
-    private final String accessToken;
-
     private final RestTemplate restTemplate;
 
-    public ArtifactoryService(RestTemplate restTemplate, @Value("${artifactory.base-url}") String baseUrl, @Value("${accessToken}") String accessToken) {
+    public ArtifactoryService(RestTemplate restTemplate, @Value("${artifactory.base-url}") String baseUrl) {
         this.restTemplate = restTemplate;
         this.baseUrl = baseUrl;
-        this.accessToken=accessToken;
     }
 
     public String getAllArtifact() {
@@ -45,4 +42,5 @@ String url=urlArtifact.getBaseUri()+urlArtifact.getFolderUri();
 
         return response;
     }
+
 }
