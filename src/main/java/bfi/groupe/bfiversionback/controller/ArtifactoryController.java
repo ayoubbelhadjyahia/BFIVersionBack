@@ -1,12 +1,15 @@
 package bfi.groupe.bfiversionback.controller;
 import bfi.groupe.bfiversionback.entity.UrlArtifact;
 import bfi.groupe.bfiversionback.service.ArtifactoryService;
+import com.fasterxml.jackson.core.PrettyPrinter;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/projects")
+@CrossOrigin(origins = "*")
 public class ArtifactoryController {
 
     private final ArtifactoryService artifactoryService;
@@ -17,8 +20,9 @@ public class ArtifactoryController {
     }
 
     @GetMapping("/getAllArtifact")
-    public String getAllArtifact() {
-        return artifactoryService.getAllArtifact();
+    public ResponseEntity getAllArtifact() {
+         ResponseEntity<String> response =artifactoryService.getAllArtifact();
+        return response;
     }
     @PostMapping("/getArtifactUrl")
     public ResponseEntity<?> getArtifactUrl(@RequestBody UrlArtifact urlArtifact) {

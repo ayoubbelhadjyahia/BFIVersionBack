@@ -16,7 +16,7 @@ public class ArtifactoryService {
         this.baseUrl = baseUrl;
     }
 
-    public String getAllArtifact() {
+    public ResponseEntity getAllArtifact() {
         String url = baseUrl + "/artifactory/api/storage/bfi-virtual";
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -27,7 +27,7 @@ public class ArtifactoryService {
                 entity,
                 String.class);
 
-        return response.getBody();
+        return response;
     }
     public ResponseEntity<String> getArtifactByUrl(UrlArtifact urlArtifact) {
         HttpHeaders headers = new HttpHeaders();
