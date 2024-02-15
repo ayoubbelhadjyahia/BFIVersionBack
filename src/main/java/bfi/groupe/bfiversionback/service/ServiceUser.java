@@ -4,6 +4,7 @@ import bfi.groupe.bfiversionback.Iservice.IserviceUser;
 import bfi.groupe.bfiversionback.entity.Utilisateur;
 import bfi.groupe.bfiversionback.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,7 +83,7 @@ UserRepository userRepository;
             return "code est incorrect";
         }
         else if(u.getDateEndCode().isBefore(LocalDateTime.now())) {
-            return "date expirer ";
+            return "date expirer";
         }
         else{
                 u.setPassword(passwordEncoder.encodePassword(NewPassword));
@@ -90,8 +91,16 @@ UserRepository userRepository;
                 u.setDateEndCode(null);
                 userRepository.save(u);
             }
-
         return "OK";
+    }
+    @Override
+    public void EditUser(Utilisateur utilisateur) {
+        utilisateur.setPassword(this.passwordEncoder.encodePassword(utilisateur.getPassword()));
+        userRepository.save(utilisateur);
+    }
 
+    @Override
+    public Utilisateur GetUserById(Integer id) {
+        return userRepository.findById(id).orElse(null);
     }
 }

@@ -22,6 +22,11 @@ public class UserController {
         return iserviceUser.GetALLUser();
     }
 
+    @GetMapping("GetUsrById/{idU}")
+    public Utilisateur GetUserById(@PathVariable("idU") Integer idU) {
+        return iserviceUser.GetUserById(idU);
+    }
+
     @PostMapping("/add-user")
     @ResponseBody
     public ResponseEntity<?> addUser(@RequestBody Utilisateur utilisateur) {
@@ -30,6 +35,11 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+
+    }
+    @PutMapping("/EditUser")
+    public void EditUser(@RequestBody Utilisateur utilisateur){
+        iserviceUser.EditUser(utilisateur);
 
     }
 
