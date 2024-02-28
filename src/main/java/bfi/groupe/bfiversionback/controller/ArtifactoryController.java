@@ -1,4 +1,5 @@
 package bfi.groupe.bfiversionback.controller;
+import bfi.groupe.bfiversionback.configuration.MessageResponse;
 import bfi.groupe.bfiversionback.entity.UrlArtifact;
 import bfi.groupe.bfiversionback.service.ArtifactoryService;
 import com.fasterxml.jackson.core.PrettyPrinter;
@@ -28,6 +29,10 @@ public class ArtifactoryController {
     public ResponseEntity<?> getArtifactUrl(@RequestBody UrlArtifact urlArtifact) {
         ResponseEntity<String> response = artifactoryService.getArtifactByUrl(urlArtifact);
         return response;
+    }
+    @GetMapping("/GetUserArtifactoryDetails")
+    public ResponseEntity GetUserAndGroupeDetails(){
+      return   ResponseEntity.ok(artifactoryService.getUserAndGroupDetails());
     }
 }
 

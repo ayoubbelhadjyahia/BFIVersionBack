@@ -1,5 +1,7 @@
 package bfi.groupe.bfiversionback.service;
 import bfi.groupe.bfiversionback.entity.UrlArtifact;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -9,10 +11,12 @@ import org.springframework.web.client.RestTemplate;
 public class ArtifactoryService {
 
     private final String baseUrl;
+    private final String apiKey;
     private final RestTemplate restTemplate;
 
-    public ArtifactoryService(RestTemplate restTemplate, @Value("${artifactory.base-url}") String baseUrl) {
+    public ArtifactoryService(RestTemplate restTemplate,@Value("apiKey")String  apiKey, @Value("${artifactory.base-url}") String baseUrl) {
         this.restTemplate = restTemplate;
+        this.apiKey=apiKey;
         this.baseUrl = baseUrl;
     }
 
@@ -29,11 +33,11 @@ public class ArtifactoryService {
 
         return response;
     }
+
     public ResponseEntity<String> getArtifactByUrl(UrlArtifact urlArtifact) {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>(headers);
-String url=urlArtifact.getBaseUri()+urlArtifact.getFolderUri();
-        System.out.println(url);
+        String url = urlArtifact.getBaseUri() + urlArtifact.getFolderUri();
         ResponseEntity<String> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
@@ -41,6 +45,47 @@ String url=urlArtifact.getBaseUri()+urlArtifact.getFolderUri();
                 String.class);
 
         return response;
+    }
+
+    public String getUserAndGroupDetails() {
+        String url = baseUrl + "/artifactory/api/system/security";
+
+        // Create HttpHeaders with Basic Authentication
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth("admin", "password");
+
+        // Include the headers in the HTTP request
+        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+
+        // Send GET request with authentication headers
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                requestEntity,
+                String.class
+        );
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            return parseXmlToJson(responseEntity.getBody());
+        } else {
+            return "Failed to fetch data. Status code: " + responseEntity.getStatusCodeValue();
+        }
+    }
+    public String parseXmlToJson(String xmlData) {
+        try {
+            // Create an XmlMapper
+            XmlMapper xmlMapper = new XmlMapper();
+
+            // Parse XML to JSON
+            Object json = xmlMapper.readValue(xmlData, Object.class);
+
+            // Convert JSON object to String
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.writeValueAsString(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed to parse XML to JSON: " + e.getMessage();
+        }
     }
 
 }
