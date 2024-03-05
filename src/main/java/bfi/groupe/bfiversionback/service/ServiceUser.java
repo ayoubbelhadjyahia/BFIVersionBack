@@ -8,6 +8,7 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -18,10 +19,10 @@ import java.util.List;
 public class ServiceUser implements IserviceUser{
     UserRepository userRepository;
     final MailerService mailerService;
+
     private final RandomString randomString;
 
-    @Autowired
-    PasswordEncoderService passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<Utilisateur> GetALLUser() {
@@ -56,7 +57,7 @@ public class ServiceUser implements IserviceUser{
             return "date expirer";
         }
         else{
-                u.setPassword(passwordEncoder.encodePassword(NewPassword));
+                u.setPassword(passwordEncoder.encode(NewPassword));
                 u.setCodeVerification(null);
                 u.setDateEndCode(null);
                 userRepository.save(u);
@@ -65,8 +66,13 @@ public class ServiceUser implements IserviceUser{
     }
     @Override
     public void EditUser(Utilisateur utilisateur) {
-        utilisateur.setPassword(this.passwordEncoder.encodePassword(utilisateur.getPassword()));
+        Utilisateur u=userRepository.getById(utilisateur.getId());
+        if(!u.getPassword().equals(utilisateur.getPassword())){
+            System.out.println("je suis la");
+            utilisateur.setPassword(this.passwordEncoder.encode(utilisateur.getPassword()));
+        }
         userRepository.save(utilisateur);
+
     }
 
     @Override

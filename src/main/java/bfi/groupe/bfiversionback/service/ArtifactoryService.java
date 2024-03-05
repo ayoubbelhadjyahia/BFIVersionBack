@@ -87,5 +87,28 @@ public class ArtifactoryService {
             return "Failed to parse XML to JSON: " + e.getMessage();
         }
     }
+    public String getStorage() {
+        String url = baseUrl + "/artifactory/api/storageinfo";
 
+        // Create HttpHeaders with Basic Authentication
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth("admin", "password");
+
+        // Include the headers in the HTTP request
+        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+
+        // Send GET request with authentication headers
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                requestEntity,
+                String.class
+        );
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            return responseEntity.getBody();
+        } else {
+            return "Failed to fetch data. Status code: " + responseEntity.getStatusCodeValue();
+        }
+    }
 }

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import static   bfi.groupe.bfiversionback.entity.Permission.*;
 
 @RequiredArgsConstructor
-public enum Role {
+public enum Role{
 
     USER(Collections.emptySet()),
     ADMIN(
@@ -19,11 +19,7 @@ public enum Role {
                     ADMIN_READ,
                     ADMIN_UPDATE,
                     ADMIN_DELETE,
-                    ADMIN_CREATE,
-                    MANAGER_READ,
-                    MANAGER_UPDATE,
-                    MANAGER_DELETE,
-                    MANAGER_CREATE
+                    ADMIN_CREATE
             )
     ),
 

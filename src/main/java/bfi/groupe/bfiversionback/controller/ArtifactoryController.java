@@ -33,6 +33,9 @@ public class ArtifactoryController {
     @GetMapping("/GetUserArtifactoryDetails")
     public ResponseEntity GetUserAndGroupeDetails(){
       return   ResponseEntity.ok(artifactoryService.getUserAndGroupDetails());
+    } @GetMapping("/GetStorageinfo")
+    public ResponseEntity GetStorageinfo(){
+      return   ResponseEntity.ok(artifactoryService.getStorage());
     }
 }
 
