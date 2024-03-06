@@ -55,15 +55,11 @@ public class AuthenticationService {
             if(!passwordEncoder.matches(request.getPassword(),repository.GetUserByEmail(request.getEmail()).getPassword())){
                 return ResponseEntity.ok("Mot de passe est incorrect");
             }
-            authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                    request.getEmail(),
-                    request.getPassword()
-            )
-    );
+
 
         var user = repository.findByEmail(request.getEmail())
                 .orElseThrow();
+
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);

@@ -13,6 +13,9 @@ public interface UserRepository extends JpaRepository<Utilisateur, Integer> {
     @Query("select u from Utilisateur u where u.email like :email")
     Optional<Utilisateur> findByEmail(@Param("email") String email);
 
+    @Query("select u from Utilisateur u where u.Username like :email")
+    Optional<Utilisateur> findByUsername(@Param("email") String email);
+
     @Query("select u from Utilisateur u where u.Username like :username order by u.Username desc limit 1")
     Utilisateur GetUserByUsername(@Param("username") String username);
     @Query("select u from Utilisateur u where u.email like :email order by u.email desc limit 1")
