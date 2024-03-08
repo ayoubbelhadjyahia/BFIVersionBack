@@ -39,6 +39,9 @@ public class UserController {
     @PutMapping("/EditUser")
     public ResponseEntity EditUser(@RequestBody Utilisateur utilisateur) {
         ApplicationAuditAware a = new ApplicationAuditAware();
+        System.out.println(a.getCurrentAuditor().get());
+        System.out.println(utilisateur.getRole());
+
         if (a.getCurrentAuditor().get() == utilisateur.getId() || iserviceUser.GetUserById(a.getCurrentAuditor().get()).getRole().toString().equals("ADMIN")) {
             List<Token> tokens = tokenRepository.findAllTokenByUser(utilisateur.getId());
             for (Token i : tokens) {
