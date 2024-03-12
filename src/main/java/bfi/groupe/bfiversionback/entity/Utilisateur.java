@@ -30,6 +30,7 @@ public class Utilisateur implements UserDetails {
     private String Password;
     private Long Phonenumber;
     private String CodeVerification;
+    private String Lang;
     @Enumerated(EnumType.STRING)
     private Role Role;
     private LocalDateTime DateEndCode;

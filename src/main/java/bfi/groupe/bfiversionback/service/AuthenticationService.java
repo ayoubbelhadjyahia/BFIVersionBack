@@ -38,6 +38,7 @@ public class AuthenticationService {
         }else
 
             request.setPassword(this.passwordEncoder.encode(request.getPassword()));
+        request.setLang("fr");
         repository.save(request);
         var jwtToken = jwtService.generateToken(request);
         var refreshToken = jwtService.generateRefreshToken(request);

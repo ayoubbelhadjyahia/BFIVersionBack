@@ -4,16 +4,13 @@ import bfi.groupe.bfiversionback.Iservice.IserviceUser;
 import bfi.groupe.bfiversionback.entity.Utilisateur;
 import bfi.groupe.bfiversionback.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.apache.catalina.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ServiceUser implements IserviceUser{
@@ -68,7 +65,6 @@ public class ServiceUser implements IserviceUser{
     public void EditUser(Utilisateur utilisateur) {
         Utilisateur u=userRepository.getById(utilisateur.getId());
         if(!u.getPassword().equals(utilisateur.getPassword())){
-            System.out.println("je suis la");
             utilisateur.setPassword(this.passwordEncoder.encode(utilisateur.getPassword()));
         }
         userRepository.save(utilisateur);
@@ -78,5 +74,12 @@ public class ServiceUser implements IserviceUser{
     @Override
     public Utilisateur GetUserById(Integer id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void ChangeLang(Integer id, String lang) {
+        Utilisateur a=userRepository.findById(id).orElse(null);
+        a.setLang(lang);
+        userRepository.save(a);
     }
 }
