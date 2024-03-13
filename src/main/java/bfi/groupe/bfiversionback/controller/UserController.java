@@ -3,6 +3,7 @@ package bfi.groupe.bfiversionback.controller;
 import bfi.groupe.bfiversionback.Iservice.IserviceUser;
 import bfi.groupe.bfiversionback.auditing.ApplicationAuditAware;
 import bfi.groupe.bfiversionback.configuration.MessageResponse;
+import bfi.groupe.bfiversionback.entity.ChangeLang;
 import bfi.groupe.bfiversionback.entity.ResetPassword;
 import bfi.groupe.bfiversionback.entity.Token;
 import bfi.groupe.bfiversionback.entity.Utilisateur;
@@ -35,9 +36,11 @@ public class UserController {
     public Utilisateur GetUserById(@PathVariable("idU") Integer idU) {
         return iserviceUser.GetUserById(idU);
     }
-    @GetMapping("ChangeLang/{lang}/{id}")
-    public void ChangeLang(@PathVariable("id") Integer idU,@PathVariable("lang")String lang) {
-         iserviceUser.ChangeLang(idU,lang);
+    @PutMapping("ChangeLang")
+    public ResponseEntity ChangeLang(@RequestBody ChangeLang changeLang) {
+        System.out.println("je suis la");
+         iserviceUser.ChangeLang(changeLang.getId(),changeLang.getLang());
+         return ResponseEntity.ok("Langue is changed");
     }
 
     @PutMapping("/EditUser")
