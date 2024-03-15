@@ -38,7 +38,6 @@ public class UserController {
     }
     @PutMapping("ChangeLang")
     public ResponseEntity ChangeLang(@RequestBody ChangeLang changeLang) {
-        System.out.println("je suis la");
          iserviceUser.ChangeLang(changeLang.getId(),changeLang.getLang());
          return ResponseEntity.ok("Langue is changed");
     }
