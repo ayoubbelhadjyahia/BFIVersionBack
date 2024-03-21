@@ -10,14 +10,12 @@ public class RandomString {
         int leftLimit = 48; // ascii '0'
         int rightLimit = 122; // ascii 'z'
 
-        Random random = new Random();
+        Random random=new Random();
 
-        String generatedString = random.ints(leftLimit, rightLimit + 1)
+        return random.ints(leftLimit, rightLimit + 1)
                 .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
                 .limit(l)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
-
-        return generatedString;
     }
 }

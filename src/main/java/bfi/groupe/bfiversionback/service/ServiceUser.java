@@ -26,16 +26,16 @@ public class ServiceUser implements IserviceUser{
         return userRepository.findAll();
     }
     @Override
-    public void DeleteUser(Integer IdUser) {
-    userRepository.deleteById(IdUser);
+    public void DeleteUser(Integer idUser) {
+    userRepository.deleteById(idUser);
     }
     @Override
-    public String SendCode(String Email) {
-        if(userRepository.GetUserByEmail(Email)==null){
+    public String SendCode(String email) {
+        if(userRepository.GetUserByEmail(email)==null){
             return "Email n'existe pas";
         }else{
             String code = randomString.randomGeneratedString(8);
-            Utilisateur u =userRepository.GetUserByEmail(Email);
+            Utilisateur u =userRepository.GetUserByEmail(email);
             u.setCodeVerification(code);
             u.setDateEndCode(LocalDateTime.now().plusMinutes(5));
             mailerService.sendEmail(u.getEmail(),"REST CODE","votre code de verification est :"+code+"\nNB:Le code ne fonctionne pas apres 5 minutes");
@@ -45,8 +45,8 @@ public class ServiceUser implements IserviceUser{
     }
 
     @Override
-    public String ResetPassword(String Code, String NewPassword) {
-        Utilisateur u = userRepository.GetUserByCode(Code);
+    public String ResetPassword(String code, String newPassword) {
+        Utilisateur u = userRepository.GetUserByCode(code);
         if (u == null ){
             return "code est incorrect";
         }
@@ -54,7 +54,7 @@ public class ServiceUser implements IserviceUser{
             return "date expirer";
         }
         else{
-                u.setPassword(passwordEncoder.encode(NewPassword));
+                u.setPassword(passwordEncoder.encode(newPassword));
                 u.setCodeVerification(null);
                 u.setDateEndCode(null);
                 userRepository.save(u);
@@ -63,12 +63,13 @@ public class ServiceUser implements IserviceUser{
     }
     @Override
     public void EditUser(Utilisateur utilisateur) {
-        Utilisateur u=userRepository.getById(utilisateur.getId());
-        if(!u.getPassword().equals(utilisateur.getPassword())){
-            utilisateur.setPassword(this.passwordEncoder.encode(utilisateur.getPassword()));
+        Utilisateur u=userRepository.findById(utilisateur.getId()).orElse(null);
+        if(u!=null) {
+            if (!u.getPassword().equals(utilisateur.getPassword())) {
+                utilisateur.setPassword(this.passwordEncoder.encode(utilisateur.getPassword()));
+            }
+            userRepository.save(utilisateur);
         }
-        userRepository.save(utilisateur);
-
     }
 
     @Override
@@ -79,7 +80,11 @@ public class ServiceUser implements IserviceUser{
     @Override
     public void ChangeLang(Integer id, String lang) {
         Utilisateur a=userRepository.findById(id).orElse(null);
-        a.setLang(lang);
-        userRepository.save(a);
+        if(a!=null) {
+            a.setLang(lang);
+            userRepository.save(a);
+        }
+
+
     }
 }
