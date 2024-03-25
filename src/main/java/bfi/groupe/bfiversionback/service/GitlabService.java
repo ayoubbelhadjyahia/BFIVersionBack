@@ -2,10 +2,7 @@ package bfi.groupe.bfiversionback.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -31,7 +28,10 @@ public class GitlabService {
         );
     }
     public ResponseEntity GetAllGroupe() {
-        String url = gitLabApiBaseUrl +"groups/";
+        try {
+
+
+        String url = gitLabApiBaseUrl +"groups";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -41,6 +41,10 @@ public class GitlabService {
                 requestEntity,
                 String.class
         );
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred");
     }
     public ResponseEntity GetGroupsById(int id) {
         String url = gitLabApiBaseUrl +"groups/"+id;

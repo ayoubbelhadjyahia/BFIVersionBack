@@ -15,7 +15,8 @@ public class GitlabController {
     public ResponseEntity GetUserGitlab(@PathVariable("id") int id){
 ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
         return response;
-    }   @GetMapping("/GetAllGroupe/")
+    }
+    @GetMapping("/GetAllGroupe/")
     public ResponseEntity GetAllGroupe(){
 ResponseEntity<String> response=gitlabService.GetAllGroupe();
         return response;

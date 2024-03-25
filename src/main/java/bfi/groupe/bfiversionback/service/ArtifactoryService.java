@@ -49,15 +49,9 @@ public class ArtifactoryService {
 
     public String getUserAndGroupDetails() {
         String url = baseUrl + "/artifactory/api/system/security";
-
-        // Create HttpHeaders with Basic Authentication
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth("admin", "password");
-
-        // Include the headers in the HTTP request
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-
-        // Send GET request with authentication headers
         ResponseEntity<String> responseEntity = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
@@ -73,13 +67,8 @@ public class ArtifactoryService {
     }
     public String parseXmlToJson(String xmlData) {
         try {
-            // Create an XmlMapper
             XmlMapper xmlMapper = new XmlMapper();
-
-            // Parse XML to JSON
             Object json = xmlMapper.readValue(xmlData, Object.class);
-
-            // Convert JSON object to String
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.writeValueAsString(json);
         } catch (Exception e) {
@@ -89,15 +78,9 @@ public class ArtifactoryService {
     }
     public String getStorage() {
         String url = baseUrl + "/artifactory/api/storageinfo";
-
-        // Create HttpHeaders with Basic Authentication
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth("admin", "password");
-
-        // Include the headers in the HTTP request
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-
-        // Send GET request with authentication headers
         ResponseEntity<String> responseEntity = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
