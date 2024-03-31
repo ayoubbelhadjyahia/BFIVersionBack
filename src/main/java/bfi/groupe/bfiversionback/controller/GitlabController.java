@@ -18,8 +18,7 @@ ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
     }
     @GetMapping("/GetAllGroupe/")
     public ResponseEntity GetAllGroupe(){
-ResponseEntity<String> response=gitlabService.GetAllGroupe();
-        return response;
+        return ResponseEntity.ok(gitlabService.getAllGroups().getBody());
     }
     @GetMapping("/GetGroupsById/{id}")
     public ResponseEntity GetGroupsById(@PathVariable("id") int id){
