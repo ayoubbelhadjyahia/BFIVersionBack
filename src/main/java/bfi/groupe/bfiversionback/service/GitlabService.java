@@ -97,4 +97,30 @@ public class GitlabService {
                 String.class
         );
     }
+    public ResponseEntity GetBranches(int id) {
+        String url = gitLabApiBaseUrl +"projects/"+id+"/repository/branches";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(gitLabApiToken);
+        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+        return restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                requestEntity,
+                String.class
+        );
+    }
+
+
+    public ResponseEntity GetTags(int id) {
+        String url = gitLabApiBaseUrl +"projects/"+id+"/repository/tags";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(gitLabApiToken);
+        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+        return restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                requestEntity,
+                String.class
+        );
+    }
 }
