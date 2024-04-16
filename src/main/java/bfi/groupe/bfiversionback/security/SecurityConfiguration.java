@@ -1,4 +1,4 @@
-package bfi.groupe.bfiversionback.Security;
+package bfi.groupe.bfiversionback.security;
 
 
 import lombok.RequiredArgsConstructor;
@@ -17,10 +17,7 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import static   bfi.groupe.bfiversionback.entity.Permission.*;
 import static   bfi.groupe.bfiversionback.entity.Role.ADMIN;
 import static bfi.groupe.bfiversionback.entity.Role.USER;
-import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration

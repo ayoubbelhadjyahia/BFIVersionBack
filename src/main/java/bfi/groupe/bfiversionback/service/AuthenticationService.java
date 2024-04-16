@@ -2,7 +2,7 @@ package bfi.groupe.bfiversionback.service;
 
 import bfi.groupe.bfiversionback.auth.AuthenticationRequest;
 import bfi.groupe.bfiversionback.auth.AuthenticationResponse;
-import bfi.groupe.bfiversionback.Security.JwtService;
+import bfi.groupe.bfiversionback.security.JwtService;
 import bfi.groupe.bfiversionback.entity.Token;
 import bfi.groupe.bfiversionback.entity.TokenType;
 import bfi.groupe.bfiversionback.entity.Utilisateur;
@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

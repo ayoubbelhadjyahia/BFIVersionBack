@@ -1,4 +1,4 @@
-package bfi.groupe.bfiversionback.Security;
+package bfi.groupe.bfiversionback.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

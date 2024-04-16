@@ -1,4 +1,4 @@
-package bfi.groupe.bfiversionback.Security;
+package bfi.groupe.bfiversionback.security;
 
 import bfi.groupe.bfiversionback.repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;

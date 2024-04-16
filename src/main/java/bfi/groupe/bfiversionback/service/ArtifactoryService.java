@@ -11,12 +11,10 @@ import org.springframework.web.client.RestTemplate;
 public class ArtifactoryService {
 
     private final String baseUrl;
-    private final String apiKey;
     private final RestTemplate restTemplate;
 
     public ArtifactoryService(RestTemplate restTemplate,@Value("apiKey")String  apiKey, @Value("${artifactory.base-url}") String baseUrl) {
         this.restTemplate = restTemplate;
-        this.apiKey=apiKey;
         this.baseUrl = baseUrl;
     }
 

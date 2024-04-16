@@ -86,7 +86,7 @@ public class GitlabService {
         );
     }
     public ResponseEntity GetProjectById(int id) {
-        String url = gitLabApiBaseUrl +"projects/"+id;
+        String url = gitLabApiBaseUrl +"projects/"+id+"?statistics=true";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
