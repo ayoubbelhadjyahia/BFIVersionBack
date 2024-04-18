@@ -56,7 +56,6 @@ public class GitlabService {
                 );
                 if (responseEntity.getStatusCode() == HttpStatus.OK) {
                     String responseBody = responseEntity.getBody();
-                    // Deserialize each JSON string into a GitLabGroup object
                     List<GitLabGroup> groups = objectMapper.readValue(responseBody, new TypeReference<List<GitLabGroup>>() {
                     });
                     allGroups.addAll(groups);
@@ -142,10 +141,24 @@ public class GitlabService {
                 requestEntity,
                 String.class
         );
-        return response.getBody().replaceAll("\\\\r\\\\n", "\n");
+        return response.getBody();
     }
-    public ResponseEntity GetGitlabFileTree(int id) {
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/tree";
+    public ResponseEntity GetGitlabRepoTree(int id) {
+        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/tree?per_page=100";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(gitLabApiToken);
+        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+        return restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                requestEntity,
+                String.class
+        );
+    }
+    public ResponseEntity GetGitlabFileTree(int id,String path) {
+        int page=1;
+        int perPage= 100;
+        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/tree?path="+path+"&per_page=100";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);

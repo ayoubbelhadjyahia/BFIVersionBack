@@ -1,5 +1,7 @@
 package bfi.groupe.bfiversionback.controller;
 
+import bfi.groupe.bfiversionback.auth.AuthenticationRequest;
+import bfi.groupe.bfiversionback.entity.GitLabGetFileTree;
 import bfi.groupe.bfiversionback.service.GitlabService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,10 +47,20 @@ ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
         ResponseEntity<String> response=gitlabService.GetTags(id);
         return response;
     }
-    @GetMapping("/GetProjectFileTreeGitlab/{id}")
-    public ResponseEntity GetProjectFileTreeGitlab(@PathVariable("id") int id){
-        ResponseEntity<String> response=gitlabService.GetGitlabFileTree(id);
+    @GetMapping("/GetGitlabRepoTree/{id}")
+    public ResponseEntity GetGitlabRepoTree(@PathVariable("id") int id){
+        ResponseEntity<String> response=gitlabService.GetGitlabRepoTree(id);
         return response;
+    }
+    @GetMapping("/GetGitlabFileTree/{id}/{path}")
+    public ResponseEntity GetGitlabFileTree(@PathVariable("id") int id,@PathVariable("path") String path){
+        ResponseEntity<String> response=gitlabService.GetGitlabFileTree(id,path);
+        return response;
+    }
+    @PostMapping("/GetGitlabFileTree")
+    public ResponseEntity GetGitlabFileTree(@RequestBody GitLabGetFileTree request) {
+         ResponseEntity<String> response=gitlabService.GetGitlabFileTree(request.getId(),request.getPath());
+   return response;
     }
     @GetMapping("/GetFileGitlab/{id}/{path}/{branch}")
     public ResponseEntity<String> getFile(@PathVariable("id") int id, @PathVariable("path") String path, @PathVariable("branch") String branch) {
@@ -58,6 +70,7 @@ ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
         jsonResponse.put("message", content);
         return ResponseEntity.status(HttpStatus.OK).body(jsonResponse.toString());
     }
+
     @GetMapping("/GetCommits/{id}")
     public ResponseEntity GetCommits(@PathVariable("id") int id){
         ResponseEntity<String> response=gitlabService.GetCommits(id);
