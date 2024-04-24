@@ -3,14 +3,11 @@ package bfi.groupe.bfiversionback.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import bfi.groupe.bfiversionback.entity.GitLabGroup;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,13 +132,18 @@ public class GitlabService {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                requestEntity,
-                String.class
-        );
-        return response.getBody();
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    requestEntity,
+                    String.class
+            );
+            return response.getBody();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
     public ResponseEntity GetGitlabRepoTree(int id) {
         String url = gitLabApiBaseUrl + "projects/" + id + "/repository/tree?per_page=100";

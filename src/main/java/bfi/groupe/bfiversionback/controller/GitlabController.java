@@ -1,15 +1,22 @@
 package bfi.groupe.bfiversionback.controller;
 
-import bfi.groupe.bfiversionback.auth.AuthenticationRequest;
+import bfi.groupe.bfiversionback.entity.GitLabCode;
 import bfi.groupe.bfiversionback.entity.GitLabGetFileTree;
 import bfi.groupe.bfiversionback.service.GitlabService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
 
 @RestController
 @AllArgsConstructor
@@ -52,19 +59,15 @@ ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
         ResponseEntity<String> response=gitlabService.GetGitlabRepoTree(id);
         return response;
     }
-    @GetMapping("/GetGitlabFileTree/{id}/{path}")
-    public ResponseEntity GetGitlabFileTree(@PathVariable("id") int id,@PathVariable("path") String path){
-        ResponseEntity<String> response=gitlabService.GetGitlabFileTree(id,path);
-        return response;
-    }
     @PostMapping("/GetGitlabFileTree")
     public ResponseEntity GetGitlabFileTree(@RequestBody GitLabGetFileTree request) {
          ResponseEntity<String> response=gitlabService.GetGitlabFileTree(request.getId(),request.getPath());
    return response;
     }
-    @GetMapping("/GetFileGitlab/{id}/{path}/{branch}")
-    public ResponseEntity<String> getFile(@PathVariable("id") int id, @PathVariable("path") String path, @PathVariable("branch") String branch) {
-        String content = gitlabService.GetFileGitlab(id, path, branch);
+
+    @PostMapping("/GetCodeGitlab")
+    public ResponseEntity GetCodeGitlab(@RequestBody GitLabCode request) {
+        String content=gitlabService.GetFileGitlab(request.getId(), request.getPath(), request.getBranch());
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode jsonResponse = objectMapper.createObjectNode();
         jsonResponse.put("message", content);
