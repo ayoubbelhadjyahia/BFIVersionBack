@@ -7,7 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,25 +132,50 @@ public class GitlabService {
     }
 
     public String GetFileGitlab(int id, String pathFichier, String branch) {
-        System.out.println(pathFichier);
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier + "/raw?ref=" + branch;
+
+        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier.replace("/", "%2F") + "/raw?ref=" + branch;
+        URI gitlabUri = UriComponentsBuilder.fromHttpUrl(url)
+                .build(true).toUri();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+        System.out.println(gitlabUri);
         try {
             ResponseEntity<String> response = restTemplate.exchange(
-                    url,
+                    gitlabUri,
                     HttpMethod.GET,
                     requestEntity,
                     String.class
             );
-            return response.getBody();
-        }catch (Exception e){
-            if(e.getMessage().contains("404")){
+
+            String fileContent = response.getBody();
+            if (fileContent == null) {
+                return "vide";
+            }
+
+            return fileContent;
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
                 return "404";
             }
         }
         return null;
+    }
+    public ResponseEntity<byte[]> getFileContent(int id, String pathFichier, String branch) {
+        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier.replace("/", "%2F") + "/raw?ref=" + branch;
+        URI gitlabUri = UriComponentsBuilder.fromHttpUrl(url)
+                .build(true).toUri();HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(gitLabApiToken);
+        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+        ResponseEntity<byte[]> responseEntity = restTemplate.exchange(
+                gitlabUri,
+                HttpMethod.GET,
+                requestEntity,
+                byte[].class
+        );
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(MediaType.IMAGE_PNG);
+        return new ResponseEntity<>(responseEntity.getBody(), responseHeaders, responseEntity.getStatusCode());
     }
     public ResponseEntity GetGitlabRepoTree(int id) {
         String url = gitLabApiBaseUrl + "projects/" + id + "/repository/tree?per_page=100";
@@ -175,7 +204,7 @@ public class GitlabService {
         );
     }
     public ResponseEntity GetCommits(int id) {
-        String url = gitLabApiBaseUrl +"projects/"+id+"/repository/commits";
+        String url = gitLabApiBaseUrl +"projects/"+id+"/repository/commits?per_page=100";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -186,19 +215,5 @@ public class GitlabService {
                 String.class
         );
     }
-    public ResponseEntity<byte[]> getFileContent() {
-        String apiUrl = gitLabApiBaseUrl + "/projects/140/repository/files/BFIDjerbaManagement.png/raw?ref=master";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(gitLabApiToken);
-        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-        ResponseEntity<byte[]> responseEntity = restTemplate.exchange(
-                apiUrl,
-                HttpMethod.GET,
-                requestEntity,
-                byte[].class
-        );
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setContentType(MediaType.IMAGE_JPEG);
-        return new ResponseEntity<>(responseEntity.getBody(), responseHeaders, responseEntity.getStatusCode());
-    }
+
 }
