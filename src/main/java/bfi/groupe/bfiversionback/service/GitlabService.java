@@ -128,6 +128,7 @@ public class GitlabService {
     }
 
     public String GetFileGitlab(int id, String pathFichier, String branch) {
+        System.out.println(pathFichier);
         String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier + "/raw?ref=" + branch;
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
@@ -141,7 +142,9 @@ public class GitlabService {
             );
             return response.getBody();
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            if(e.getMessage().contains("404")){
+                return "404";
+            }
         }
         return null;
     }
@@ -182,5 +185,20 @@ public class GitlabService {
                 requestEntity,
                 String.class
         );
+    }
+    public ResponseEntity<byte[]> getFileContent() {
+        String apiUrl = gitLabApiBaseUrl + "/projects/140/repository/files/BFIDjerbaManagement.png/raw?ref=master";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(gitLabApiToken);
+        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+        ResponseEntity<byte[]> responseEntity = restTemplate.exchange(
+                apiUrl,
+                HttpMethod.GET,
+                requestEntity,
+                byte[].class
+        );
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(MediaType.IMAGE_JPEG);
+        return new ResponseEntity<>(responseEntity.getBody(), responseHeaders, responseEntity.getStatusCode());
     }
 }

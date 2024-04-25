@@ -6,9 +6,9 @@ import bfi.groupe.bfiversionback.service.GitlabService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -68,10 +68,17 @@ ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
     @PostMapping("/GetCodeGitlab")
     public ResponseEntity GetCodeGitlab(@RequestBody GitLabCode request) {
         String content=gitlabService.GetFileGitlab(request.getId(), request.getPath(), request.getBranch());
+        if(content=="404"){
+            ResponseEntity.status(HttpStatus.OK).body("404");
+        }
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode jsonResponse = objectMapper.createObjectNode();
         jsonResponse.put("message", content);
         return ResponseEntity.status(HttpStatus.OK).body(jsonResponse.toString());
+    }
+    @GetMapping("/image")
+    public ResponseEntity<byte[]> getFileContent() {
+        return gitlabService.getFileContent();
     }
 
     @GetMapping("/GetCommits/{id}")
