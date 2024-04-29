@@ -162,7 +162,7 @@ public class GitlabService {
         return null;
     }
     public ResponseEntity<byte[]> getFileContent(int id, String pathFichier, String branch) {
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier.replace("/", "%2F") + "/raw?ref=" + branch;
+        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier.replace("/", "%2F").replace(" ","%20") + "/raw?ref=" + branch;
         URI gitlabUri = UriComponentsBuilder.fromHttpUrl(url)
                 .build(true).toUri();HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
