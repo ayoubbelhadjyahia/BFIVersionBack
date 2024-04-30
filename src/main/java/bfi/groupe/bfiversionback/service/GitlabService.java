@@ -174,7 +174,11 @@ public class GitlabService {
                 byte[].class
         );
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setContentType(MediaType.IMAGE_PNG);
+        if(pathFichier.endsWith("svg")){
+            responseHeaders.setContentType(MediaType.APPLICATION_XML);
+        }else {
+            responseHeaders.setContentType(MediaType.IMAGE_PNG);
+        }
         return new ResponseEntity<>(responseEntity.getBody(), responseHeaders, responseEntity.getStatusCode());
     }
     public ResponseEntity GetGitlabRepoTree(int id) {
