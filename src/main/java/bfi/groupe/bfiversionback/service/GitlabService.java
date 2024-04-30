@@ -161,6 +161,28 @@ public class GitlabService {
         }
         return null;
     }
+
+
+    public String GetFileGitlabDetails(int id, String pathFichier, String branch) {
+
+        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier.replace("/", "%2F") + "?ref=" + branch;
+        URI gitlabUri = UriComponentsBuilder.fromHttpUrl(url)
+                .build(true).toUri();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(gitLabApiToken);
+        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+        System.out.println(gitlabUri);
+
+            ResponseEntity<String> response = restTemplate.exchange(
+                    gitlabUri,
+                    HttpMethod.GET,
+                    requestEntity,
+                    String.class
+            );
+
+            String fileContent = response.getBody();
+            return fileContent;
+    }
     public ResponseEntity<byte[]> getFileContent(int id, String pathFichier, String branch) {
         String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier.replace("/", "%2F").replace(" ","%20") + "/raw?ref=" + branch;
         URI gitlabUri = UriComponentsBuilder.fromHttpUrl(url)

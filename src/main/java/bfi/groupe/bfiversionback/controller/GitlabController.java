@@ -76,6 +76,12 @@ ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
         jsonResponse.put("message", content);
         return ResponseEntity.status(HttpStatus.OK).body(jsonResponse.toString());
     }
+    @PostMapping("/GetFileGitlabDetails")
+    public ResponseEntity GetFileGitlabDetails(@RequestBody GitLabCode request) {
+        String content=gitlabService.GetFileGitlabDetails(request.getId(), request.getPath(), request.getBranch());
+
+        return ResponseEntity.status(HttpStatus.OK).body(content);
+    }
     @PostMapping("/image")
     public ResponseEntity<byte[]> getFileContent(@RequestBody GitLabCode request) {
         return gitlabService.getFileContent(request.getId(), request.getPath(), request.getBranch());
