@@ -3,6 +3,8 @@ package bfi.groupe.bfiversionback.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import bfi.groupe.bfiversionback.entity.GitLabGroup;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -19,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GitlabService {
     private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @Value("${gitlab.api.baseurl}")
     private String gitLabApiBaseUrl;
 
@@ -216,8 +219,6 @@ public class GitlabService {
         );
     }
     public ResponseEntity GetGitlabFileTree(int id,String path) {
-        int page=1;
-        int perPage= 100;
         String url = gitLabApiBaseUrl + "projects/" + id + "/repository/tree?path="+path+"&per_page=100";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
@@ -229,17 +230,43 @@ public class GitlabService {
                 String.class
         );
     }
-    public ResponseEntity GetCommits(int id) {
-        String url = gitLabApiBaseUrl +"projects/"+id+"/repository/commits?per_page=100";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(gitLabApiToken);
-        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-        return restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                requestEntity,
-                String.class
-        );
-    }
+    public ResponseEntity<ObjectNode> getCommits(int id) {
+        int page = 1;
+        int perPage = 100;
+        ObjectNode allCommits = objectMapper.createObjectNode();
+        ArrayNode commitsArray = objectMapper.createArrayNode();
 
+        while (true) {
+            String url = gitLabApiBaseUrl + "projects/" + id + "/repository/commits?page=" + page + "&per_page=" + perPage;
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(gitLabApiToken);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+            ResponseEntity<String> responseEntity = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    requestEntity,
+                    String.class
+            );
+
+            if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                if (responseEntity.getBody().length() == 2) {
+                    break;
+                }
+                try {
+                    ArrayNode pageCommits = (ArrayNode) objectMapper.readTree(responseEntity.getBody());
+                    commitsArray.addAll(pageCommits);
+                    page++;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+
+        allCommits.set("commits", commitsArray);
+        return ResponseEntity.ok().body(allCommits);
+    }
 }

@@ -89,7 +89,7 @@ ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
 
     @GetMapping("/GetCommits/{id}")
     public ResponseEntity GetCommits(@PathVariable("id") int id){
-        ResponseEntity<String> response=gitlabService.GetCommits(id);
+        ResponseEntity<ObjectNode> response=gitlabService.getCommits(id);
         return response;
     }
 }
