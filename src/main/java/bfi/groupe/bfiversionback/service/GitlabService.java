@@ -133,7 +133,7 @@ public class GitlabService {
 
     public String GetFileGitlab(int id, String pathFichier, String branch) {
 
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier.replace("/", "%2F") + "/raw?ref=" + branch;
+        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier.replace("/", "%2F").replace(" ","%20")+ "/raw?ref=" + branch;
         URI gitlabUri = UriComponentsBuilder.fromHttpUrl(url)
                 .build(true).toUri();
         HttpHeaders headers = new HttpHeaders();
@@ -165,7 +165,7 @@ public class GitlabService {
 
     public String GetFileGitlabDetails(int id, String pathFichier, String branch) {
 
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier.replace("/", "%2F") + "?ref=" + branch;
+        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier.replace("/", "%2F").replace(" ","%20")+ "?ref=" + branch;
         URI gitlabUri = UriComponentsBuilder.fromHttpUrl(url)
                 .build(true).toUri();
         HttpHeaders headers = new HttpHeaders();
