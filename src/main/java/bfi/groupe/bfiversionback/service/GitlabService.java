@@ -13,7 +13,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,15 +138,13 @@ public class GitlabService {
         );
     }
 
-    public String GetFileGitlab(int id, String pathFichier, String branch) {
-
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier.replace("/", "%2F").replace(" ","%20")+ "/raw?ref=" + branch;
-        URI gitlabUri = UriComponentsBuilder.fromHttpUrl(url)
-                .build(true).toUri();
+    public String GetFileGitlab(int id, String pathFichier, String branch) throws URISyntaxException {
+        String encodedPath = URLEncoder.encode(pathFichier, StandardCharsets.UTF_8).replace("+","%20");
+        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + encodedPath+ "/raw?ref=" + branch;
+        URI gitlabUri = new URI(url);
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-        System.out.println(gitlabUri);
         try {
             ResponseEntity<String> response = restTemplate.exchange(
                     gitlabUri,
@@ -166,15 +168,13 @@ public class GitlabService {
     }
 
 
-    public String GetFileGitlabDetails(int id, String pathFichier, String branch) {
-
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier.replace("/", "%2F").replace(" ","%20")+ "?ref=" + branch;
-        URI gitlabUri = UriComponentsBuilder.fromHttpUrl(url)
-                .build(true).toUri();
+    public String GetFileGitlabDetails(int id, String pathFichier, String branch) throws URISyntaxException {
+        String encodedPath = URLEncoder.encode(pathFichier, StandardCharsets.UTF_8).replace("+","%20");
+        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + encodedPath+ "?ref=" + branch;
+        URI gitlabUri = new URI(url);
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-        System.out.println(gitlabUri);
 
             ResponseEntity<String> response = restTemplate.exchange(
                     gitlabUri,
@@ -186,10 +186,11 @@ public class GitlabService {
             String fileContent = response.getBody();
             return fileContent;
     }
-    public ResponseEntity<byte[]> getFileContent(int id, String pathFichier, String branch) {
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + pathFichier.replace("/", "%2F").replace(" ","%20") + "/raw?ref=" + branch;
-        URI gitlabUri = UriComponentsBuilder.fromHttpUrl(url)
-                .build(true).toUri();HttpHeaders headers = new HttpHeaders();
+    public ResponseEntity<byte[]> getFileContent(int id, String pathFichier, String branch) throws URISyntaxException {
+        String encodedPath = URLEncoder.encode(pathFichier, StandardCharsets.UTF_8).replace("+","%20");
+        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + encodedPath + "/raw?ref=" + branch;
+        URI gitlabUri = new URI(url);
+        HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<byte[]> responseEntity = restTemplate.exchange(
@@ -199,7 +200,10 @@ public class GitlabService {
                 byte[].class
         );
         HttpHeaders responseHeaders = new HttpHeaders();
-        if(pathFichier.endsWith("svg")){
+
+        if(pathFichier.endsWith("pdf")){
+            responseHeaders.setContentType(MediaType.APPLICATION_PDF);
+        }else if(pathFichier.endsWith("svg")){
             responseHeaders.setContentType(MediaType.APPLICATION_XML);
         }else {
             responseHeaders.setContentType(MediaType.IMAGE_PNG);

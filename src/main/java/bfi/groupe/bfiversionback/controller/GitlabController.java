@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -66,7 +68,7 @@ ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
     }
 
     @PostMapping("/GetCodeGitlab")
-    public ResponseEntity GetCodeGitlab(@RequestBody GitLabCode request) {
+    public ResponseEntity GetCodeGitlab(@RequestBody GitLabCode request) throws URISyntaxException {
         String content=gitlabService.GetFileGitlab(request.getId(), request.getPath(), request.getBranch());
         if(content=="404"){
             ResponseEntity.status(HttpStatus.OK).body("404");
@@ -77,13 +79,13 @@ ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
         return ResponseEntity.status(HttpStatus.OK).body(jsonResponse.toString());
     }
     @PostMapping("/GetFileGitlabDetails")
-    public ResponseEntity GetFileGitlabDetails(@RequestBody GitLabCode request) {
+    public ResponseEntity GetFileGitlabDetails(@RequestBody GitLabCode request) throws URISyntaxException {
         String content=gitlabService.GetFileGitlabDetails(request.getId(), request.getPath(), request.getBranch());
 
         return ResponseEntity.status(HttpStatus.OK).body(content);
     }
     @PostMapping("/image")
-    public ResponseEntity<byte[]> getFileContent(@RequestBody GitLabCode request) {
+    public ResponseEntity<byte[]> getFileContent(@RequestBody GitLabCode request) throws UnsupportedEncodingException, URISyntaxException {
         return gitlabService.getFileContent(request.getId(), request.getPath(), request.getBranch());
     }
 
