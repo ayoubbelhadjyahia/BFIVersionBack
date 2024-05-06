@@ -11,11 +11,16 @@ import org.springframework.web.client.RestTemplate;
 public class ArtifactoryService {
 
     private final String baseUrl;
+    private final String username;
+    private final String password;
+
     private final RestTemplate restTemplate;
 
-    public ArtifactoryService(RestTemplate restTemplate,@Value("apiKey")String  apiKey, @Value("${artifactory.base-url}") String baseUrl) {
+    public ArtifactoryService(RestTemplate restTemplate,@Value("${UsernameArtifactory}")String  username,@Value("${passwordArtifactory}")String  password,@Value("apiKey")String  apiKey, @Value("${artifactory.base-url}") String baseUrl) {
         this.restTemplate = restTemplate;
         this.baseUrl = baseUrl;
+        this.password=password;
+        this.username=username;
     }
 
     public ResponseEntity getAllArtifact() {
@@ -48,7 +53,7 @@ public class ArtifactoryService {
     public String getUserAndGroupDetails() {
         String url = baseUrl + "/artifactory/api/system/security";
         HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth("admin", "password");
+        headers.setBasicAuth(username,password);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(
                 url,
@@ -77,7 +82,7 @@ public class ArtifactoryService {
     public String getStorage() {
         String url = baseUrl + "/artifactory/api/storageinfo";
         HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth("admin", "password");
+        headers.setBasicAuth(username,password);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(
                 url,

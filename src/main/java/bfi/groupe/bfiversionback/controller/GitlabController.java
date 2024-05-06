@@ -45,6 +45,17 @@ ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
         ResponseEntity<String> response=gitlabService.GetProjectById(id);
         return response;
     }
+    @GetMapping("/GetEventsbyId/{id}")
+    public ResponseEntity GetEventsbyId(@PathVariable("id") int id){
+        ResponseEntity<String> response=gitlabService.GetEventsbyId(id);
+        return response;
+    }
+
+    @GetMapping("/GetUsers")
+    public ResponseEntity GetUsers(){
+        ResponseEntity<String> response=gitlabService.getUsers();
+        return response;
+    }
     @GetMapping("/GetBranches/{id}")
     public ResponseEntity GetBranches(@PathVariable("id") int id){
         ResponseEntity<String> response=gitlabService.GetBranches(id);
