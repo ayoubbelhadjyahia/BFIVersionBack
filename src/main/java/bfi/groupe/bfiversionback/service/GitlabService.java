@@ -112,17 +112,20 @@ public class GitlabService {
 
     }
     public ResponseEntity GetEventsbyId(int id) {
-        String url = gitLabApiBaseUrl + "users/" + id + "/events?per_page=100";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(gitLabApiToken);
-        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-        return restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                requestEntity,
-                String.class
-        );
-
+        try {
+            String url = gitLabApiBaseUrl + "users/" + id + "/events?per_page=100&order_by=id ";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(gitLabApiToken);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+            return restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    requestEntity,
+                    String.class
+            );
+        } catch (Exception e) {
+        return ResponseEntity.ok("nothing");
+        }
     }
     public ResponseEntity<String> getUsers() {
         String url = gitLabApiBaseUrl + "users?per_page=100";
