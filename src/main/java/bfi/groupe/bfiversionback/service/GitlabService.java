@@ -111,22 +111,6 @@ public class GitlabService {
         );
 
     }
-    public ResponseEntity GetEventsbyId(int id) {
-        try {
-            String url = gitLabApiBaseUrl + "users/" + id + "/events?per_page=100&order_by=id ";
-            HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(gitLabApiToken);
-            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-            return restTemplate.exchange(
-                    url,
-                    HttpMethod.GET,
-                    requestEntity,
-                    String.class
-            );
-        } catch (Exception e) {
-        return ResponseEntity.ok("nothing");
-        }
-    }
     public ResponseEntity<String> getUsers() {
         String url = gitLabApiBaseUrl + "users?per_page=100";
         HttpHeaders headers = new HttpHeaders();
@@ -301,5 +285,79 @@ public class GitlabService {
 
         allCommits.set("commits", commitsArray);
         return ResponseEntity.ok().body(allCommits);
+    }
+    public ResponseEntity<ObjectNode> GetEventsbyId(int id) {
+        int page = 1;
+        int perPage = 100;
+        ObjectNode allEvents = objectMapper.createObjectNode();
+        ArrayNode EventsArray = objectMapper.createArrayNode();
+
+        while (true) {
+            String url = gitLabApiBaseUrl + "users/" + id + "/events?page=" + page + "&per_page=" + perPage;
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(gitLabApiToken);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+            ResponseEntity<String> responseEntity = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    requestEntity,
+                    String.class
+            );
+
+            if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                if (responseEntity.getBody().length() == 2) {
+                    break;
+                }
+                try {
+                    ArrayNode pageEvent = (ArrayNode) objectMapper.readTree(responseEntity.getBody());
+                    EventsArray.addAll(pageEvent);
+                    page++;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+        allEvents.set("Events", EventsArray);
+        return ResponseEntity.ok().body(allEvents);
+    }
+    public ResponseEntity<ObjectNode> GetAllProjects() {
+        int page = 1;
+        int perPage = 100;
+        ObjectNode allProjects = objectMapper.createObjectNode();
+        ArrayNode ProjectsArray = objectMapper.createArrayNode();
+
+        while (true) {
+            String url = gitLabApiBaseUrl + "projects?page=" + page + "&per_page=" + perPage;
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(gitLabApiToken);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+            ResponseEntity<String> responseEntity = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    requestEntity,
+                    String.class
+            );
+
+            if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                if (responseEntity.getBody().length() == 2) {
+                    break;
+                }
+                try {
+                    ArrayNode pageProjects = (ArrayNode) objectMapper.readTree(responseEntity.getBody());
+                    ProjectsArray.addAll(pageProjects);
+                    page++;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+        allProjects.set("Projects", ProjectsArray);
+        return ResponseEntity.ok().body(allProjects);
     }
 }
