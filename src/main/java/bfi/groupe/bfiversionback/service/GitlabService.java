@@ -18,6 +18,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -323,14 +325,18 @@ public class GitlabService {
         allEvents.set("Events", EventsArray);
         return ResponseEntity.ok().body(allEvents);
     }
-    public ResponseEntity<ObjectNode> GetAllProjects() {
+    public ResponseEntity<ObjectNode> GetAllProjectsLastWeek() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        LocalDateTime sevenDaysAgo = currentDate.minusDays(7);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = sevenDaysAgo.format(formatter);
         int page = 1;
         int perPage = 100;
         ObjectNode allProjects = objectMapper.createObjectNode();
         ArrayNode ProjectsArray = objectMapper.createArrayNode();
 
         while (true) {
-            String url = gitLabApiBaseUrl + "projects?page=" + page + "&per_page=" + perPage;
+            String url = gitLabApiBaseUrl + "projects?page=" + page + "&per_page=" + perPage + "&last_activity_after="+formattedDate.replace(" ","T")+"Z";
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(gitLabApiToken);
             HttpEntity<?> requestEntity = new HttpEntity<>(headers);

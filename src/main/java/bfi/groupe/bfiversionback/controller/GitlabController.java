@@ -104,9 +104,9 @@ ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
         ResponseEntity<ObjectNode> response=gitlabService.GetEventsbyId(id);
         return response;
     }
-    @GetMapping("/GetAllProjects")
-    public ResponseEntity GetEventsbyId(){
-        ResponseEntity<ObjectNode> response=gitlabService.GetAllProjects();
+    @GetMapping("/GetAllProjectsLastWeek")
+    public ResponseEntity GetAllProjectsLastWeek(){
+        ResponseEntity<ObjectNode> response=gitlabService.GetAllProjectsLastWeek();
         return response;
     }
 }
