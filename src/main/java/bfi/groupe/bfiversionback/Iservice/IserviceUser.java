@@ -1,5 +1,6 @@
 package bfi.groupe.bfiversionback.Iservice;
 
+import bfi.groupe.bfiversionback.entity.UrlServer;
 import bfi.groupe.bfiversionback.entity.Utilisateur;
 import org.apache.catalina.User;
 import org.springframework.http.ResponseEntity;
@@ -14,4 +15,10 @@ public interface IserviceUser {
      void EditUser(Utilisateur U);
      Utilisateur GetUserById(Integer id);
      void ChangeLang(Integer id,String Lang);
+     UrlServer AddUrlServer(UrlServer urlServer);
+     UrlServer SetUrlServerArtifactory(String port);
+
+     UrlServer GetUrlServer();
+     UrlServer SetUrlServerGit(String port);
+
 }

@@ -37,5 +37,9 @@ public class ArtifactoryController {
     public ResponseEntity GetStorageinfo(){
       return   ResponseEntity.ok(artifactoryService.getStorage());
     }
+    @GetMapping("/GetVersion")
+    public ResponseEntity GetVersion(){
+      return   ResponseEntity.ok(artifactoryService.getVersion());
+    }
 }
 

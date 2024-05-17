@@ -366,4 +366,16 @@ public class GitlabService {
         allProjects.set("Projects", ProjectsArray);
         return ResponseEntity.ok().body(allProjects);
     }
+    public ResponseEntity GetGitlabVersion() {
+        String url = gitLabApiBaseUrl + "version";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(gitLabApiToken);
+        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+        return restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                requestEntity,
+                String.class
+        );
+    }
 }

@@ -97,4 +97,22 @@ public class ArtifactoryService {
             return "Failed to fetch data. Status code: " + responseEntity.getStatusCodeValue();
         }
     }
+    public String getVersion() {
+        String url = baseUrl + "/artifactory/api/system/version";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth(username,password);
+        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                requestEntity,
+                String.class
+        );
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            return responseEntity.getBody();
+        } else {
+            return "Failed to fetch data. Status code: " + responseEntity.getStatusCodeValue();
+        }
+    }
 }

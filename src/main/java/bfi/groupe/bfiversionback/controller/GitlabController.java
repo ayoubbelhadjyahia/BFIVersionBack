@@ -109,4 +109,9 @@ ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
         ResponseEntity<ObjectNode> response=gitlabService.GetAllProjectsLastWeek();
         return response;
     }
+    @GetMapping("/GetGitlabVersion")
+    public ResponseEntity GetGitlabVersion(){
+        ResponseEntity<String> response=gitlabService.GetGitlabVersion();
+        return response;
+    }
 }

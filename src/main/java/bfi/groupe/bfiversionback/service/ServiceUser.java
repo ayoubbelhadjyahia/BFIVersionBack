@@ -1,7 +1,9 @@
 package bfi.groupe.bfiversionback.service;
 
 import bfi.groupe.bfiversionback.Iservice.IserviceUser;
+import bfi.groupe.bfiversionback.entity.UrlServer;
 import bfi.groupe.bfiversionback.entity.Utilisateur;
+import bfi.groupe.bfiversionback.repository.UrlServerREpository;
 import bfi.groupe.bfiversionback.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ServiceUser implements IserviceUser{
     UserRepository userRepository;
+    UrlServerREpository urlServerRepository;
     final MailerService mailerService;
 
     private final RandomString randomString;
@@ -87,4 +90,50 @@ public class ServiceUser implements IserviceUser{
 
 
     }
+
+    @Override
+    public UrlServer AddUrlServer(UrlServer urlServer) {
+        List<UrlServer> u=urlServerRepository.findAll();
+if(u.isEmpty()){
+    System.out.println(urlServer);
+    urlServerRepository.save(urlServer);
+    return urlServer;
+            }
+return null;
+    }
+
+    @Override
+    public UrlServer SetUrlServerArtifactory(String port) {
+        List<UrlServer> urlServers = urlServerRepository.findAll();
+        if (!urlServers.isEmpty()) {
+            UrlServer u = urlServers.get(0);
+            u.setUrlArtifactory(port);
+            urlServerRepository.save(u);
+            return u;
+        }
+        return null;
+    }
+    @Override
+    public UrlServer SetUrlServerGit(String port) {
+        List<UrlServer> urlServers = urlServerRepository.findAll();
+        if (!urlServers.isEmpty()) {
+            UrlServer u = urlServers.get(0);
+            u.setUrlGitLab(port);
+            urlServerRepository.save(u);
+            return u;
+        }
+        return null;
+    }
+
+    @Override
+    public UrlServer  GetUrlServer() {
+        List<UrlServer> urlServers=urlServerRepository.findAll();
+        if(!urlServers.isEmpty()){
+            UrlServer u = urlServers.get(0);
+            return u;
+        }
+       return null;
+    }
+
+
 }
