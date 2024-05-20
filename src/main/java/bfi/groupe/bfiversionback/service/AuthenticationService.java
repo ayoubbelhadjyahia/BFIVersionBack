@@ -2,6 +2,7 @@ package bfi.groupe.bfiversionback.service;
 
 import bfi.groupe.bfiversionback.auth.AuthenticationRequest;
 import bfi.groupe.bfiversionback.auth.AuthenticationResponse;
+import bfi.groupe.bfiversionback.entity.UrlServer;
 import bfi.groupe.bfiversionback.security.JwtService;
 import bfi.groupe.bfiversionback.entity.Token;
 import bfi.groupe.bfiversionback.entity.TokenType;
@@ -23,6 +24,7 @@ import java.io.IOException;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
+    private final ServiceUser serviceUser;
     private final UserRepository repository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
@@ -56,7 +58,11 @@ public class AuthenticationService {
                 return ResponseEntity.ok("Mot de passe est incorrect");
             }
 
-
+        UrlServer baseUrl =serviceUser.GetUrlServer();
+            if(baseUrl==null){
+                UrlServer a=new UrlServer(0,"192.168.230.3","192.168.230.2:8081");
+                serviceUser.AddUrlServer(a);
+            }
         var user = repository.findByEmail(request.getEmail())
                 .orElseThrow();
 
