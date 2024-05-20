@@ -1,5 +1,6 @@
 package bfi.groupe.bfiversionback.service;
 import bfi.groupe.bfiversionback.entity.UrlArtifact;
+import bfi.groupe.bfiversionback.entity.UrlServer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,22 +10,24 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class ArtifactoryService {
-
-    private final String baseUrl;
+    private final ServiceUser serviceUser;
     private final String username;
     private final String password;
 
     private final RestTemplate restTemplate;
 
-    public ArtifactoryService(RestTemplate restTemplate,@Value("${UsernameArtifactory}")String  username,@Value("${passwordArtifactory}")String  password,@Value("apiKey")String  apiKey, @Value("${artifactory.base-url}") String baseUrl) {
+    public ArtifactoryService(ServiceUser serviceUser,RestTemplate restTemplate,@Value("${UsernameArtifactory}")String  username,@Value("${passwordArtifactory}")String  password) {
         this.restTemplate = restTemplate;
-        this.baseUrl = baseUrl;
         this.password=password;
         this.username=username;
+        this.serviceUser=serviceUser;
     }
 
+
+
     public ResponseEntity getAllArtifact() {
-        String url = baseUrl + "/artifactory/api/storage/bfi-virtual";
+        String baseUrl =serviceUser.GetUrlServer().getUrlArtifactory();
+        String url ="http://"+baseUrl+"/artifactory/api/storage/bfi-virtual";
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
@@ -51,7 +54,8 @@ public class ArtifactoryService {
     }
 
     public String getUserAndGroupDetails() {
-        String url = baseUrl + "/artifactory/api/system/security";
+        String baseUrl =serviceUser.GetUrlServer().getUrlArtifactory();
+        String url ="http://"+ baseUrl + "/artifactory/api/system/security";
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(username,password);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -80,7 +84,8 @@ public class ArtifactoryService {
         }
     }
     public String getStorage() {
-        String url = baseUrl + "/artifactory/api/storageinfo";
+        String baseUrl =serviceUser.GetUrlServer().getUrlArtifactory();
+        String url = "http://"+ baseUrl + "/artifactory/api/storageinfo";
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(username,password);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -98,7 +103,8 @@ public class ArtifactoryService {
         }
     }
     public String getVersion() {
-        String url = baseUrl + "/artifactory/api/system/version";
+        String baseUrl =serviceUser.GetUrlServer().getUrlArtifactory();
+        String url = "http://"+baseUrl + "/artifactory/api/system/version";
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(username,password);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);

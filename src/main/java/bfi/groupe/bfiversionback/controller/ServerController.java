@@ -1,8 +1,6 @@
 package bfi.groupe.bfiversionback.controller;
 
 import bfi.groupe.bfiversionback.entity.UrlServer;
-import bfi.groupe.bfiversionback.entity.Utilisateur;
-import bfi.groupe.bfiversionback.service.GitlabService;
 import bfi.groupe.bfiversionback.service.ServiceUser;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class ServerController {
     private final ServiceUser serviceUser;
 
-    @GetMapping("/getUserGitlab")
+    @GetMapping("/getUrlServer")
     public UrlServer GetUserGitlab(){
         return serviceUser.GetUrlServer();
     }
@@ -29,7 +27,6 @@ public class ServerController {
     }
     @PostMapping("/AddUrlServer")
     public ResponseEntity AddUrlServer(@RequestBody UrlServer request) {
-        System.out.println(request);
         return ResponseEntity.ok(serviceUser.AddUrlServer(request));
     }
 }

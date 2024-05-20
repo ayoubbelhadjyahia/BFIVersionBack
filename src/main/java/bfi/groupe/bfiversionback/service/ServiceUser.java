@@ -126,7 +126,7 @@ return null;
     }
 
     @Override
-    public UrlServer  GetUrlServer() {
+    public UrlServer GetUrlServer() {
         List<UrlServer> urlServers=urlServerRepository.findAll();
         if(!urlServers.isEmpty()){
             UrlServer u = urlServers.get(0);
