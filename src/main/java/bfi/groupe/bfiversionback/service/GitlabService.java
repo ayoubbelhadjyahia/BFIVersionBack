@@ -27,15 +27,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GitlabService {
     private final RestTemplate restTemplate;
+    private final ServiceUser ServiceUser;
     private final ObjectMapper objectMapper = new ObjectMapper();
-    @Value("${gitlab.api.baseurl}")
-    private String gitLabApiBaseUrl;
+
 
     @Value("${gitlab.api.token}")
     private String gitLabApiToken;
 
     public ResponseEntity GetUserGitLab(int id) {
-        String url = gitLabApiBaseUrl + "users/" + id;
+        String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
+        String url = "https://" + gitLabApiBaseUrl + "/api/v4/users/" + id;
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -49,12 +50,13 @@ public class GitlabService {
 
     public ResponseEntity<?> getAllGroups() {
         try {
+            String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
             int page = 1;
             int perPage = 100;
             List<GitLabGroup> allGroups = new ArrayList<>();
             ObjectMapper objectMapper = new ObjectMapper();
             while (true) {
-                String url = gitLabApiBaseUrl + "groups?page=" + page + "&per_page=" + perPage;
+                String url = "https://" + gitLabApiBaseUrl + "/api/v4/groups?page=" + page + "&per_page=" + perPage;
                 HttpHeaders headers = new HttpHeaders();
                 headers.setBearerAuth(gitLabApiToken);
                 HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -82,13 +84,13 @@ public class GitlabService {
 
             return ResponseEntity.ok().body(allGroups);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
     public ResponseEntity GetGroupsById(int id) {
-        String url = gitLabApiBaseUrl + "groups/" + id;
+        String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
+        String url = "https://" + gitLabApiBaseUrl + "/api/v4/groups/" + id;
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -101,7 +103,8 @@ public class GitlabService {
     }
 
     public ResponseEntity GetProjectById(int id) {
-        String url = gitLabApiBaseUrl + "projects/" + id + "?statistics=true";
+        String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
+        String url = "https://" + gitLabApiBaseUrl + "/api/v4/projects/" + id + "?statistics=true";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -113,8 +116,11 @@ public class GitlabService {
         );
 
     }
+
     public ResponseEntity<String> getUsers() {
-        String url = gitLabApiBaseUrl + "users?per_page=100";
+        try{
+        String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
+        String url = "https://" + gitLabApiBaseUrl + "/api/v4/users?per_page=100";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -125,9 +131,13 @@ public class GitlabService {
                 String.class
         );
     }
+        catch (Exception e){
+            return null;
+        }}
 
     public ResponseEntity GetBranches(int id) {
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/branches";
+        String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
+        String url = "https://" + gitLabApiBaseUrl + "/api/v4/projects/" + id + "/repository/branches";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -141,7 +151,8 @@ public class GitlabService {
 
 
     public ResponseEntity GetTags(int id) {
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/tags";
+        String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
+        String url = "https://" + gitLabApiBaseUrl + "/api/v4/projects/" + id + "/repository/tags";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -154,8 +165,9 @@ public class GitlabService {
     }
 
     public String GetFileGitlab(int id, String pathFichier, String branch) throws URISyntaxException {
-        String encodedPath = URLEncoder.encode(pathFichier, StandardCharsets.UTF_8).replace("+","%20");
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + encodedPath+ "/raw?ref=" + branch;
+        String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
+        String encodedPath = URLEncoder.encode(pathFichier, StandardCharsets.UTF_8).replace("+", "%20");
+        String url = "https://" + gitLabApiBaseUrl + "/api/v4/projects/" + id + "/repository/files/" + encodedPath + "/raw?ref=" + branch;
         URI gitlabUri = new URI(url);
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
@@ -184,26 +196,29 @@ public class GitlabService {
 
 
     public String GetFileGitlabDetails(int id, String pathFichier, String branch) throws URISyntaxException {
-        String encodedPath = URLEncoder.encode(pathFichier, StandardCharsets.UTF_8).replace("+","%20");
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + encodedPath+ "?ref=" + branch;
+        String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
+        String encodedPath = URLEncoder.encode(pathFichier, StandardCharsets.UTF_8).replace("+", "%20");
+        String url = "https://" + gitLabApiBaseUrl + "/api/v4/projects/" + id + "/repository/files/" + encodedPath + "?ref=" + branch;
         URI gitlabUri = new URI(url);
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
-            ResponseEntity<String> response = restTemplate.exchange(
-                    gitlabUri,
-                    HttpMethod.GET,
-                    requestEntity,
-                    String.class
-            );
+        ResponseEntity<String> response = restTemplate.exchange(
+                gitlabUri,
+                HttpMethod.GET,
+                requestEntity,
+                String.class
+        );
 
-            String fileContent = response.getBody();
-            return fileContent;
+        String fileContent = response.getBody();
+        return fileContent;
     }
+
     public ResponseEntity<byte[]> getFileContent(int id, String pathFichier, String branch) throws URISyntaxException {
-        String encodedPath = URLEncoder.encode(pathFichier, StandardCharsets.UTF_8).replace("+","%20");
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/files/" + encodedPath + "/raw?ref=" + branch;
+        String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
+        String encodedPath = URLEncoder.encode(pathFichier, StandardCharsets.UTF_8).replace("+", "%20");
+        String url = "https://" + gitLabApiBaseUrl + "/api/v4/projects/" + id + "/repository/files/" + encodedPath + "/raw?ref=" + branch;
         URI gitlabUri = new URI(url);
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
@@ -216,17 +231,19 @@ public class GitlabService {
         );
         HttpHeaders responseHeaders = new HttpHeaders();
 
-        if(pathFichier.endsWith("pdf")){
+        if (pathFichier.endsWith("pdf")) {
             responseHeaders.setContentType(MediaType.APPLICATION_PDF);
-        }else if(pathFichier.endsWith("svg")){
+        } else if (pathFichier.endsWith("svg")) {
             responseHeaders.setContentType(MediaType.APPLICATION_XML);
-        }else {
+        } else {
             responseHeaders.setContentType(MediaType.IMAGE_PNG);
         }
         return new ResponseEntity<>(responseEntity.getBody(), responseHeaders, responseEntity.getStatusCode());
     }
+
     public ResponseEntity GetGitlabRepoTree(int id) {
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/tree?per_page=100";
+        String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
+        String url = "https://" + gitLabApiBaseUrl + "/api/v4/projects/" + id + "/repository/tree?per_page=100";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -237,8 +254,10 @@ public class GitlabService {
                 String.class
         );
     }
-    public ResponseEntity GetGitlabFileTree(int id,String path) {
-        String url = gitLabApiBaseUrl + "projects/" + id + "/repository/tree?path="+path+"&per_page=100";
+
+    public ResponseEntity GetGitlabFileTree(int id, String path) {
+        String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
+        String url = "https://" + gitLabApiBaseUrl + "/api/v4/projects/" + id + "/repository/tree?path=" + path + "&per_page=100";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(gitLabApiToken);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -249,14 +268,16 @@ public class GitlabService {
                 String.class
         );
     }
+
     public ResponseEntity<ObjectNode> getCommits(int id) {
+        String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
         int page = 1;
         int perPage = 100;
         ObjectNode allCommits = objectMapper.createObjectNode();
         ArrayNode commitsArray = objectMapper.createArrayNode();
 
         while (true) {
-            String url = gitLabApiBaseUrl + "projects/" + id + "/repository/commits?page=" + page + "&per_page=" + perPage;
+            String url = "https://" + gitLabApiBaseUrl + "/api/v4/projects/" + id + "/repository/commits?page=" + page + "&per_page=" + perPage;
 
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(gitLabApiToken);
@@ -288,14 +309,16 @@ public class GitlabService {
         allCommits.set("commits", commitsArray);
         return ResponseEntity.ok().body(allCommits);
     }
+
     public ResponseEntity<ObjectNode> GetEventsbyId(int id) {
+        String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
         int page = 1;
         int perPage = 100;
         ObjectNode allEvents = objectMapper.createObjectNode();
         ArrayNode EventsArray = objectMapper.createArrayNode();
 
         while (true) {
-            String url = gitLabApiBaseUrl + "users/" + id + "/events?page=" + page + "&per_page=" + perPage;
+            String url = "https://" + gitLabApiBaseUrl + "/api/v4/users/" + id + "/events?page=" + page + "&per_page=" + perPage;
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(gitLabApiToken);
             HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -325,7 +348,10 @@ public class GitlabService {
         allEvents.set("Events", EventsArray);
         return ResponseEntity.ok().body(allEvents);
     }
+
     public ResponseEntity<ObjectNode> GetAllProjectsLastWeek() {
+        try{
+        String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
         LocalDateTime currentDate = LocalDateTime.now();
         LocalDateTime sevenDaysAgo = currentDate.minusDays(7);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -336,7 +362,7 @@ public class GitlabService {
         ArrayNode ProjectsArray = objectMapper.createArrayNode();
 
         while (true) {
-            String url = gitLabApiBaseUrl + "projects?page=" + page + "&per_page=" + perPage + "&last_activity_after="+formattedDate.replace(" ","T")+"Z";
+            String url = "https://" + gitLabApiBaseUrl + "/api/v4/projects?page=" + page + "&per_page=" + perPage + "&last_activity_after=" + formattedDate.replace(" ", "T") + "Z";
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(gitLabApiToken);
             HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -366,16 +392,26 @@ public class GitlabService {
         allProjects.set("Projects", ProjectsArray);
         return ResponseEntity.ok().body(allProjects);
     }
+        catch (Exception e) {
+            return null;
+        }
+        }
+
     public ResponseEntity GetGitlabVersion() {
-        String url = gitLabApiBaseUrl + "version";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(gitLabApiToken);
-        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-        return restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                requestEntity,
-                String.class
-        );
+        try {
+            String gitLabApiBaseUrl = ServiceUser.GetUrlServer().getUrlGitLab();
+            String url = "https://" + gitLabApiBaseUrl + "/api/v4/version";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(gitLabApiToken);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+            return restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    requestEntity,
+                    String.class
+            );
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

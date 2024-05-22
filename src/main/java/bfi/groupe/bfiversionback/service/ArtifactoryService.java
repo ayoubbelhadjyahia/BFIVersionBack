@@ -92,22 +92,26 @@ public class ArtifactoryService {
         }
     }
     public String getStorage() {
-        String baseUrl =serviceUser.GetUrlServer().getUrlArtifactory();
-        String url = "http://"+ baseUrl + "/artifactory/api/storageinfo";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth(username,password);
-        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                requestEntity,
-                String.class
-        );
+        try {
+            String baseUrl = serviceUser.GetUrlServer().getUrlArtifactory();
+            String url = "http://" + baseUrl + "/artifactory/api/storageinfo";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBasicAuth(username, password);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+            ResponseEntity<String> responseEntity = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    requestEntity,
+                    String.class
+            );
 
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            return responseEntity.getBody();
-        } else {
-            return "Failed to fetch data. Status code: " + responseEntity.getStatusCodeValue();
+            if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                return responseEntity.getBody();
+            } else {
+                return "Failed to fetch data. Status code: " + responseEntity.getStatusCodeValue();
+            }
+        } catch (Exception e){
+return null;
         }
     }
     public String getVersion() {
