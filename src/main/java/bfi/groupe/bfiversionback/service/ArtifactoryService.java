@@ -26,6 +26,7 @@ public class ArtifactoryService {
 
 
     public ResponseEntity getAllArtifact() {
+        try{
         String baseUrl =serviceUser.GetUrlServer().getUrlArtifactory();
         String url ="http://"+baseUrl+"/artifactory/api/storage/bfi-virtual";
         HttpHeaders headers = new HttpHeaders();
@@ -38,6 +39,9 @@ public class ArtifactoryService {
                 String.class);
 
         return response;
+    }catch (Exception e){
+            return null;
+        }
     }
 
     public ResponseEntity<String> getArtifactByUrl(UrlArtifact urlArtifact) {
@@ -54,22 +58,26 @@ public class ArtifactoryService {
     }
 
     public String getUserAndGroupDetails() {
-        String baseUrl =serviceUser.GetUrlServer().getUrlArtifactory();
-        String url ="http://"+ baseUrl + "/artifactory/api/system/security";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth(username,password);
-        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                requestEntity,
-                String.class
-        );
+        try {
+            String baseUrl = serviceUser.GetUrlServer().getUrlArtifactory();
+            String url = "http://" + baseUrl + "/artifactory/api/system/security";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBasicAuth(username, password);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+            ResponseEntity<String> responseEntity = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    requestEntity,
+                    String.class
+            );
 
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            return parseXmlToJson(responseEntity.getBody());
-        } else {
-            return "Failed to fetch data. Status code: " + responseEntity.getStatusCodeValue();
+            if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                return parseXmlToJson(responseEntity.getBody());
+            } else {
+                return "Failed to fetch data. Status code: " + responseEntity.getStatusCodeValue();
+            }
+        }catch (Exception e){
+            return null;
         }
     }
     public String parseXmlToJson(String xmlData) {
@@ -103,22 +111,26 @@ public class ArtifactoryService {
         }
     }
     public String getVersion() {
-        String baseUrl =serviceUser.GetUrlServer().getUrlArtifactory();
-        String url = "http://"+baseUrl + "/artifactory/api/system/version";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth(username,password);
-        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                requestEntity,
-                String.class
-        );
+        try {
+            String baseUrl = serviceUser.GetUrlServer().getUrlArtifactory();
+            String url = "http://" + baseUrl + "/artifactory/api/system/version";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBasicAuth(username, password);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+            ResponseEntity<String> responseEntity = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    requestEntity,
+                    String.class
+            );
 
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            return responseEntity.getBody();
-        } else {
-            return "Failed to fetch data. Status code: " + responseEntity.getStatusCodeValue();
+            if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                return responseEntity.getBody();
+            } else {
+                return "Failed to fetch data. Status code: " + responseEntity.getStatusCodeValue();
+            }
+        }catch (Exception e){
+            return null;
         }
     }
 }
