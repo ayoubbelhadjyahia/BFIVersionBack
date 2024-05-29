@@ -7,4 +7,13 @@ services:
     build: .
     ports:
       - "8090:8090"
+    depends_on:
+    - postgresql
 
+  postgresql:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: bfigroupe
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 0000
