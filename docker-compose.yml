@@ -11,7 +11,8 @@ services:
       postgresql:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bfigroupe
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: 0000
 
