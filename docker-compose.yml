@@ -8,8 +8,7 @@ services:
     ports:
       - "8090:8090"
     depends_on:
-     postgresql:
-        condition: service_healthy
+    - postgresql
 
   postgresql:
     image: postgres:latest
@@ -18,3 +17,4 @@ services:
       POSTGRES_DB: bfigroupe
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 0000
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5433/bfigroupe
