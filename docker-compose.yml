@@ -9,6 +9,10 @@ services:
       - "8090:8090"
     depends_on:
     - postgresql
+    environment:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5433/bfigroupe
+        SPRING_DATASOURCE_USERNAME: postgres
+        SPRING_DATASOURCE_PASSWORD: 0000
 
   postgresql:
     image: postgres:latest
@@ -17,4 +21,5 @@ services:
       POSTGRES_DB: bfigroupe
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 0000
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5433/bfigroupe
+    ports:
+      - "5433:5433"
