@@ -1,2 +1,1 @@
-docker exec -it db psql -U postgres -d bfigroupe -c "INSERT INTO utilisateur (code_verification, date_end_code, lang, password, phonenumber, role, username, email) VALUES ('123456', '2024-06-30', 'fr', '$2a$10$fonLE7clV5gA7l.FtCkAd.9HZwI3wKIBuzklacBGQ2oxGo2kdJQCC', '12345678', 'ADMIN', 'ADMIN',
- 'bfi@bfigroupe.com');"
+docker exec -it db psql -U postgres -d bfigroupe -c "INSERT INTO utilisateur (code_verification, date_end_code, lang, password, phonenumber, role, username, email) VALUES ('123456', '2024-06-30', 'fr', '$2a$10$fonLE7clV5gA7l.FtCkAd.9HZwI3wKIBuzklacBGQ2oxGo2kdJQCC', '12345678', 'ADMIN', 'ADMIN','bfi@bfigroupe.com');"
