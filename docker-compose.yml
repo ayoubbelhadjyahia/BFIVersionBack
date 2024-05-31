@@ -6,22 +6,8 @@ services:
     restart: always
     build: .
     environment:
-      spring.datasource.url: jdbc:postgresql://postgres:5353/bfigroupe
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5353
+      spring.datasource.url: jdbc:postgresql://localhost:5432/bfigroupe
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: 0000
     ports:
       - "8090:8090"
-    depends_on:
-    - postgresql
-
-  postgresql:
-    image: postgres:latest
-    restart: always
-    environment:
-      POSTGRES_DB: bfigroupe
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 0000
-    ports:
-      - "5353:5353"
