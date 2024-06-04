@@ -12,6 +12,7 @@ public class ArtifactoryService {
     private final ServiceUser serviceUser;
     private final String username;
     private final String password;
+    private String http="http://";
 
     private final RestTemplate restTemplate;
 
@@ -27,7 +28,7 @@ public class ArtifactoryService {
     public ResponseEntity getAllArtifact() {
         try{
         String baseUrl =serviceUser.GetUrlServer().getUrlArtifactory();
-        String url ="http://"+baseUrl+"/artifactory/api/storage/bfi-virtual";
+        String url =http+baseUrl+"/artifactory/api/storage/bfi-virtual";
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
@@ -57,7 +58,7 @@ public class ArtifactoryService {
     public String getUserAndGroupDetails() {
         try {
             String baseUrl = serviceUser.GetUrlServer().getUrlArtifactory();
-            String url = "http://" + baseUrl + "/artifactory/api/system/security";
+            String url = http + baseUrl + "/artifactory/api/system/security";
             HttpHeaders headers = new HttpHeaders();
             headers.setBasicAuth(username, password);
             HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -90,7 +91,7 @@ public class ArtifactoryService {
     public String getStorage() {
         try {
             String baseUrl = serviceUser.GetUrlServer().getUrlArtifactory();
-            String url = "http://" + baseUrl + "/artifactory/api/storageinfo";
+            String url = http + baseUrl + "/artifactory/api/storageinfo";
             HttpHeaders headers = new HttpHeaders();
             headers.setBasicAuth(username, password);
             HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -113,7 +114,7 @@ return null;
     public String getVersion() {
         try {
             String baseUrl = serviceUser.GetUrlServer().getUrlArtifactory();
-            String url = "http://" + baseUrl + "/artifactory/api/system/version";
+            String url = http + baseUrl + "/artifactory/api/system/version";
             HttpHeaders headers = new HttpHeaders();
             headers.setBasicAuth(username, password);
             HttpEntity<?> requestEntity = new HttpEntity<>(headers);
