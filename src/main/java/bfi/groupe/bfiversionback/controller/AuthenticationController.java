@@ -1,6 +1,6 @@
 package bfi.groupe.bfiversionback.controller;
 
-import bfi.groupe.bfiversionback.Iservice.IserviceUser;
+import bfi.groupe.bfiversionback.iservice.IserviceUser;
 import bfi.groupe.bfiversionback.auth.AuthenticationRequest;
 import bfi.groupe.bfiversionback.configuration.MessageResponse;
 import bfi.groupe.bfiversionback.entity.ResetPassword;

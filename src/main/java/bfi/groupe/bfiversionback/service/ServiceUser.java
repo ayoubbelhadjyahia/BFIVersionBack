@@ -1,6 +1,6 @@
 package bfi.groupe.bfiversionback.service;
 
-import bfi.groupe.bfiversionback.Iservice.IserviceUser;
+import bfi.groupe.bfiversionback.iservice.IserviceUser;
 import bfi.groupe.bfiversionback.entity.UrlServer;
 import bfi.groupe.bfiversionback.entity.Utilisateur;
 import bfi.groupe.bfiversionback.repository.UrlServerREpository;
@@ -95,7 +95,6 @@ public class ServiceUser implements IserviceUser{
     public UrlServer AddUrlServer(UrlServer urlServer) {
         List<UrlServer> u=urlServerRepository.findAll();
 if(u.isEmpty()){
-    System.out.println(urlServer);
     urlServerRepository.save(urlServer);
     return urlServer;
             }

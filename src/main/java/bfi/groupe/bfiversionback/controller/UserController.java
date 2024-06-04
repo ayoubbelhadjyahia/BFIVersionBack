@@ -1,20 +1,16 @@
 package bfi.groupe.bfiversionback.controller;
 
-import bfi.groupe.bfiversionback.Iservice.IserviceUser;
+import bfi.groupe.bfiversionback.iservice.IserviceUser;
 import bfi.groupe.bfiversionback.auditing.ApplicationAuditAware;
-import bfi.groupe.bfiversionback.configuration.MessageResponse;
 import bfi.groupe.bfiversionback.entity.ChangeLang;
-import bfi.groupe.bfiversionback.entity.ResetPassword;
 import bfi.groupe.bfiversionback.entity.Token;
 import bfi.groupe.bfiversionback.entity.Utilisateur;
 import bfi.groupe.bfiversionback.repository.TokenRepository;
 import lombok.AllArgsConstructor;
-import org.aspectj.bridge.Message;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController

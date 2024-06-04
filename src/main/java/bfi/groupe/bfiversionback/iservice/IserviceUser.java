@@ -1,9 +1,7 @@
-package bfi.groupe.bfiversionback.Iservice;
+package bfi.groupe.bfiversionback.iservice;
 
 import bfi.groupe.bfiversionback.entity.UrlServer;
 import bfi.groupe.bfiversionback.entity.Utilisateur;
-import org.apache.catalina.User;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
