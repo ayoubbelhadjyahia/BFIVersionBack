@@ -1,9 +1,6 @@
 package bfi.groupe.bfiversionback.controller;
-import bfi.groupe.bfiversionback.configuration.MessageResponse;
 import bfi.groupe.bfiversionback.entity.UrlArtifact;
 import bfi.groupe.bfiversionback.service.ArtifactoryService;
-import com.fasterxml.jackson.core.PrettyPrinter;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,23 +19,22 @@ public class ArtifactoryController {
 
     @GetMapping("/getAllArtifact")
     public ResponseEntity getAllArtifact() {
-         ResponseEntity<String> response =artifactoryService.getAllArtifact();
-        return response;
+        return artifactoryService.getAllArtifact();
     }
     @PostMapping("/getArtifactUrl")
-    public ResponseEntity<?> getArtifactUrl(@RequestBody UrlArtifact urlArtifact) {
-        ResponseEntity<String> response = artifactoryService.getArtifactByUrl(urlArtifact);
-        return response;
+    public ResponseEntity getArtifactUrl(@RequestBody UrlArtifact urlArtifact) {
+        return  artifactoryService.getArtifactByUrl(urlArtifact);
+
     }
     @GetMapping("/GetUserArtifactoryDetails")
-    public ResponseEntity GetUserAndGroupeDetails(){
+    public ResponseEntity getUserAndGroupeDetails(){
       return   ResponseEntity.ok(artifactoryService.getUserAndGroupDetails());
     } @GetMapping("/GetStorageinfo")
-    public ResponseEntity GetStorageinfo(){
+    public ResponseEntity getStorageinfo(){
       return   ResponseEntity.ok(artifactoryService.getStorage());
     }
     @GetMapping("/GetVersion")
-    public ResponseEntity GetVersion(){
+    public ResponseEntity getVersion(){
       return   ResponseEntity.ok(artifactoryService.getVersion());
     }
 }

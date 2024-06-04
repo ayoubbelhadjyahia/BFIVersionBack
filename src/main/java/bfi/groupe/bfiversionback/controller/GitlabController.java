@@ -8,17 +8,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Base64;
 
 @RestController
 @AllArgsConstructor
@@ -52,30 +43,27 @@ ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
     }
     @GetMapping("/GetBranches/{id}")
     public ResponseEntity GetBranches(@PathVariable("id") int id){
-        ResponseEntity<String> response=gitlabService.GetBranches(id);
-        return response;
-    }
+        return gitlabService.GetBranches(id);
+        }
 
     @GetMapping("/GetTags/{id}")
     public ResponseEntity GetTags(@PathVariable("id") int id){
-        ResponseEntity<String> response=gitlabService.GetTags(id);
-        return response;
+        return gitlabService.GetTags(id);
     }
     @GetMapping("/GetGitlabRepoTree/{id}")
     public ResponseEntity GetGitlabRepoTree(@PathVariable("id") int id){
-        ResponseEntity<String> response=gitlabService.GetGitlabRepoTree(id);
-        return response;
+        return gitlabService.GetGitlabRepoTree(id);
     }
     @PostMapping("/GetGitlabFileTree")
     public ResponseEntity GetGitlabFileTree(@RequestBody GitLabGetFileTree request) {
-         ResponseEntity<String> response=gitlabService.GetGitlabFileTree(request.getId(),request.getPath());
-   return response;
+        return  gitlabService.GetGitlabFileTree(request.getId(),request.getPath());
+
     }
 
     @PostMapping("/GetCodeGitlab")
     public ResponseEntity GetCodeGitlab(@RequestBody GitLabCode request) throws URISyntaxException {
         String content=gitlabService.GetFileGitlab(request.getId(), request.getPath(), request.getBranch());
-        if(content=="404"){
+        if(content.equals("404")){
             ResponseEntity.status(HttpStatus.OK).body("404");
         }
         ObjectMapper objectMapper = new ObjectMapper();
@@ -96,8 +84,8 @@ ResponseEntity<String> response=gitlabService.GetUserGitLab(id);
 
     @GetMapping("/GetCommits/{id}")
     public ResponseEntity GetCommits(@PathVariable("id") int id){
-        ResponseEntity<ObjectNode> response=gitlabService.getCommits(id);
-        return response;
+        return gitlabService.getCommits(id);
+
     }
     @GetMapping("/GetEventsbyId/{id}")
     public ResponseEntity GetEventsbyId(@PathVariable("id") int id){

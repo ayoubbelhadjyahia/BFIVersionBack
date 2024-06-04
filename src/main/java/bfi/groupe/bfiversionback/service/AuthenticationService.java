@@ -97,8 +97,8 @@ public class AuthenticationService {
         });
         tokenRepository.saveAll(validUserTokens);
     }
-    public Utilisateur GetCurrentUserByUsername(String Username){
-        return repository.GetUserByUsername(Username);
+    public Utilisateur getCurrentUserByUsername(String username){
+        return repository.GetUserByUsername(username);
     }
     public void refreshToken(
             HttpServletRequest request,

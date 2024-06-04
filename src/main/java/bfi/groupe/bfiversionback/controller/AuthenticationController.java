@@ -32,8 +32,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request)).getBody();
     }
     @GetMapping("/GetCurrentUser/{username}")
-    public Utilisateur GetCurrentUser(@PathVariable("username") String username){
-        return service.GetCurrentUserByUsername(username);
+    public Utilisateur getCurrentUser(@PathVariable("username") String username){
+        return service.getCurrentUserByUsername(username);
     }
 
     @PostMapping("/refresh-token")
@@ -44,7 +44,7 @@ public class AuthenticationController {
         service.refreshToken(request, response);
     }
     @GetMapping("/SendCode/{Email}")
-    public ResponseEntity<?> SendCode(@PathVariable("Email") String Email) {
+    public ResponseEntity sendCode(@PathVariable("Email") String Email) {
         try {
             return ResponseEntity.ok(new MessageResponse(iserviceUser.SendCode(Email)));
         } catch (Exception e) {

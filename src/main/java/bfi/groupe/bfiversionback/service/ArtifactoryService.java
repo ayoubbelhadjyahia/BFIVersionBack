@@ -1,6 +1,5 @@
 package bfi.groupe.bfiversionback.service;
 import bfi.groupe.bfiversionback.entity.UrlArtifact;
-import bfi.groupe.bfiversionback.entity.UrlServer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,13 +31,11 @@ public class ArtifactoryService {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(
+            return restTemplate.exchange(
                 url,
                 HttpMethod.GET,
                 entity,
                 String.class);
-
-        return response;
     }catch (Exception e){
             return null;
         }
@@ -48,13 +45,13 @@ public class ArtifactoryService {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>(headers);
         String url = urlArtifact.getBaseUri() + urlArtifact.getFolderUri();
-        ResponseEntity<String> response = restTemplate.exchange(
+        return restTemplate.exchange(
                 url,
                 HttpMethod.GET,
                 entity,
                 String.class);
 
-        return response;
+
     }
 
     public String getUserAndGroupDetails() {
@@ -73,12 +70,11 @@ public class ArtifactoryService {
 
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
                 return parseXmlToJson(responseEntity.getBody());
-            } else {
-                return "Failed to fetch data. Status code: " + responseEntity.getStatusCodeValue();
             }
         }catch (Exception e){
             return null;
         }
+        return null;
     }
     public String parseXmlToJson(String xmlData) {
         try {
@@ -108,7 +104,7 @@ public class ArtifactoryService {
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
                 return responseEntity.getBody();
             } else {
-                return "Failed to fetch data. Status code: " + responseEntity.getStatusCodeValue();
+                return "Failed to fetch data. Status code: ";
             }
         } catch (Exception e){
 return null;
@@ -131,7 +127,7 @@ return null;
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
                 return responseEntity.getBody();
             } else {
-                return "Failed to fetch data. Status code: " + responseEntity.getStatusCodeValue();
+                return "Failed to fetch data. Status code: ";
             }
         }catch (Exception e){
             return null;
