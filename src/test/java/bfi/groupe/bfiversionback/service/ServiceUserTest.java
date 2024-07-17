@@ -64,7 +64,7 @@ class ServiceUserTest {
         verify(passwordEncoder, times(1)).encode("newPassword");
         verify(userRepository, times(1)).save(updatedUser);
         assertEquals("encodedNewPassword", updatedUser.getPassword());
-        System.err.println("testUpdateContrat : SUCCESS");
+        System.err.println("Test Edit User : SUCCESS");
  }
 
 
@@ -74,6 +74,6 @@ class ServiceUserTest {
         Utilisateur result = serviceUser.GetUserById(1);
         assertNotNull(result);
         assertEquals(existingUser, result);
-        System.err.println("testRetrieveContrat : SUCCESS");
+        System.err.println("testRetrieveUser : SUCCESS");
     }
 }
